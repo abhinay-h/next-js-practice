@@ -9,7 +9,13 @@ import {
 } from './definitions';
 import { formatCurrency } from './utils';
 
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
+if (!process.env.POSTGRES_URL) {
+  console.error('POSTGRES_URL is not defined in the environment variables.');
+  // Throwing error early to avoid connecting to localhost
+  throw new Error('POSTGRES_URL is missing');
+}
+
+const sql = postgres(process.env.POSTGRES_URL, { ssl: 'require' });
 
 export async function fetchRevenue() {
   try {
